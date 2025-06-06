@@ -62,7 +62,7 @@ export default function HabitDetail() {
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Completion Calendar</h2>
-          <CalendarGrid habitId={habit?.id} />
+          <CalendarGrid habitId={habit?.id} onCheckinChange={fetchHabitDetail} />
         </div>
 
         <button

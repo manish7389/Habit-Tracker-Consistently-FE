@@ -108,7 +108,7 @@ export default function Dashboard() {
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Your Habits</h1>
+          <h1 className="text-2xl font-bold text-gray-800">MY Habits</h1>
           <button
             onClick={() => setShowModal(true)}
             className="bg-gray-400  px-4 py-2 rounded-lg shadow text-white"

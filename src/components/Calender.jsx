@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { format, subDays, eachDayOfInterval, isToday } from 'date-fns';
 
-export default function CalendarGrid({ habitId }) {
+export default function CalendarGrid({ habitId , onCheckinChange}) {
   const [checkins, setCheckins] = useState([]);
 
   useEffect(() => {
@@ -17,17 +17,32 @@ export default function CalendarGrid({ habitId }) {
       habit_id: habitId,
       date: date
     }
-    if (exists) {
-      const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
-      if (res.status == 201 || 200) {
-        setCheckins(checkins.filter((d) => d !== date));
+    try{
+      if (exists) {
+        const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
+        if (res.status == 201 || 200) {
+          setCheckins(checkins.filter((d) => d !== date));
+          if (typeof onCheckinChange === 'function') {
+            onCheckinChange();
+          }
+        }
+      } else {
+        const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
+        if (res.status == 201 || 200) {
+          setCheckins([...checkins, date]);
+        }
+        if (typeof onCheckinChange === 'function') {
+          onCheckinChange();
+        }
       }
-    } else {
-      const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
-      if (res.status == 201 || 200) {
-        setCheckins([...checkins, date]);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert("Something went wrong. Please try again.");
       }
     }
+    
   };
 
   const days = eachDayOfInterval({
