@@ -6,21 +6,27 @@ export default function CalendarGrid({ habitId }) {
   const [checkins, setCheckins] = useState([]);
 
   useEffect(() => {
-    axios.get(`/habits/${habitId}/checkins`).then((res) =>
-      setCheckins(res.data.map((c) => c.date))
-    );
+    axios.get(`/habit_checkins/all_habit_checkins?habit_id=${habitId}`).then((res) => {
+      setCheckins(res?.data?.checkins?.map((c) => c.date))
+    });
   }, [habitId]);
 
   const toggleCheckin = async (date) => {
-    if (!isToday(new Date(date))) return;
-
     const exists = checkins.includes(date);
+    let payload = {
+      habit_id: habitId,
+      date: date
+    }
     if (exists) {
-      await axios.delete(`/habits/${habitId}/checkins/${date}`);
-      setCheckins(checkins.filter((d) => d !== date));
+      const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
+      if (res.status == 201 || 200) {
+        setCheckins(checkins.filter((d) => d !== date));
+      }
     } else {
-      await axios.post(`/habits/${habitId}/checkins`, { date });
-      setCheckins([...checkins, date]);
+      const res = await axios.post(`/habit_checkins/create_habit_checkins`, payload);
+      if (res.status == 201 || 200) {
+        setCheckins([...checkins, date]);
+      }
     }
   };
 
@@ -29,26 +35,32 @@ export default function CalendarGrid({ habitId }) {
     end: new Date(),
   });
 
+
+
   return (
     <div className="grid grid-cols-7 gap-1 mt-2">
       {days.map((day) => {
         const dateStr = format(day, 'yyyy-MM-dd');
         const isChecked = checkins.includes(dateStr);
         const isCurrentDay = isToday(day);
+        const dateStrs = dateStr?.trim();
+        const dateObj = new Date(dateStrs);
+        const dayname = dateObj.getDate();
 
         return (
           <div
             key={dateStr}
-            onClick={() => isCurrentDay && toggleCheckin(dateStr)}
+            onClick={() => toggleCheckin(dateStr)}
             className={`w-6 h-6 rounded-md border transition cursor-pointer
               ${isCurrentDay ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
-              ${
-                isChecked
-                  ? 'bg-green-500 border-green-600'
-                  : 'bg-gray-200 border-gray-300 hover:bg-gray-300'
+              ${isChecked
+                ? 'bg-green-500 border-green-600'
+                : 'bg-gray-200 border-gray-300 hover:bg-gray-300'
               }`}
             title={dateStr}
-          />
+          >
+            <p className='text-black text-center text-sm'>{dayname}</p>
+          </div>
         );
       })}
     </div>

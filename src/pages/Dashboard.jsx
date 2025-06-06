@@ -18,14 +18,14 @@ export default function Dashboard() {
   const fetchHabits = async () => {
     try {
       const res = await axios.get('/habits/all_habits');
-      if(res?.status == 200){
-      setHabits(res.data?.habits);    
+      if (res?.status == 200) {
+        setHabits(res.data?.habits);
       }
     } catch (err) {
-          console.log('error',err);
-        if(err?.response?.data?.error){
-            return alert(err?.response?.data?.error);
-        }  
+      console.log('error', err);
+      if (err?.response?.data?.error) {
+        return alert(err?.response?.data?.error);
+      }
     }
   };
 
@@ -33,23 +33,23 @@ export default function Dashboard() {
     if (!habitName.trim()) return;
     try {
       let payload = {
-          habit : {
-            name : habitName,
-            description : description
-          }
+        habit: {
+          name: habitName,
+          description: description
+        }
       }
       const data = await axios.post('/habits/create_habit', payload);
-      if(data?.status == 201){
-      setHabitName('');
-      setDescription('');
-      setShowModal(false);
-      fetchHabits(); // refresh the list
+      if (data?.status == 201) {
+        setHabitName('');
+        setDescription('');
+        setShowModal(false);
+        fetchHabits(); // refresh the list
       }
     } catch (err) {
-         console.log('error',err);
-        if(err?.response?.data?.error){
-            return alert(err?.response?.data?.error);
-        }  
+      console.log('error', err);
+      if (err?.response?.data?.error) {
+        return alert(err?.response?.data?.error);
+      }
     }
   };
 
@@ -86,7 +86,7 @@ export default function Dashboard() {
     }
   };
 
-   const openEditModal = (habit) => {
+  const openEditModal = (habit) => {
     setHabitName(habit.name);
     setDescription(habit.description);
     setEditHabitId(habit.id);
@@ -94,7 +94,7 @@ export default function Dashboard() {
     setShowModal(true);
   };
 
-   const closeModal = () => {
+  const closeModal = () => {
     setHabitName('');
     setDescription('');
     setEditHabitId(null);
@@ -119,7 +119,7 @@ export default function Dashboard() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {habits.map((habit) => (
-            <HabitCard key={habit.id} habit={habit} openEditModal={openEditModal} handleDeleteHabit={handleDeleteHabit}/>
+            <HabitCard key={habit.id} habit={habit} openEditModal={openEditModal} handleDeleteHabit={handleDeleteHabit} />
           ))}
         </div>
       </main>

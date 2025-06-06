@@ -12,18 +12,18 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post('/users/login', { email, password });
-    console.log('res',res);
+      const res = await axios.post('/users/login', { email, password });
 
-    if(res?.status == 200){
+
+      if (res?.status == 200) {
         login(res?.data?.access_token);
         navigate('/');
-    } 
+      }
     } catch (error) {
-        console.log('error',error);
-        if(error?.response?.data?.error){
-            return alert(error?.response?.data?.error);
-        }   
+      console.log('error', error);
+      if (error?.response?.data?.error) {
+        return alert(error?.response?.data?.error);
+      }
     }
   };
 

@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Header from '../components/Header';
+import CalendarGrid from '../components/Calender';
 
 export default function HabitDetail() {
   const { state } = useLocation();
@@ -16,24 +17,17 @@ export default function HabitDetail() {
   const fetchHabitDetail = async () => {
     try {
       const res = await axios.get(`/habits/show_habit?id=${id}`);
-      console.log('res',res);
-      if(res?.status == 200){
-      setHabit(res.data?.habit);    
+      if (res?.status == 200) {
+        setHabit(res.data?.habit);
       }
     } catch (err) {
-          console.log('error',err);
-        if(err?.response?.data?.error){
-            return alert(err?.response?.data?.error);
-        }  
+      console.log('error', err);
+      if (err?.response?.data?.error) {
+        return alert(err?.response?.data?.error);
+      }
     }
   };
 
-
-//   useEffect(() => {
-//     if (!habit) {
-//       axios.get(`/habits/${id}`).then((res) => setHabit(res.data));
-//     }
-//   }, [id, habit]);
 
   if (!habit) return <div className="text-center py-10">Loading...</div>;
 
@@ -56,7 +50,7 @@ export default function HabitDetail() {
             <div className="bg-yellow-100 text-yellow-900 p-4 rounded-xl">
               <p className="text-sm font-medium">Consistency</p>
               <p className="text-xl font-bold">
-                {habit.consistency ? `${habit.consistency}%` : '0%'}
+                {habit.consistency_percentage ? `${habit.consistency_percentage}%` : '0%'}
               </p>
             </div>
             <div className="bg-purple-100 text-purple-900 p-4 rounded-xl">
@@ -68,20 +62,7 @@ export default function HabitDetail() {
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Completion Calendar</h2>
-          <div className="grid grid-cols-7 gap-2 text-center text-sm text-gray-500">
-            {habit.checkins?.map((checkin, index) => (
-              <div
-                key={index}
-                className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  checkin.done
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 text-gray-500'
-                }`}
-              >
-                {new Date(checkin.date).getDate()}
-              </div>
-            ))}
-          </div>
+          <CalendarGrid habitId={habit?.id} />
         </div>
 
         <button

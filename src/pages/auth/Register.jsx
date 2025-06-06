@@ -15,24 +15,24 @@ export default function Register() {
     e.preventDefault();
 
     let payload = {
-      user : {
-          first_name : fisrtName,
-          last_name : lastName,
-          email : email,
-          password  : password
+      user: {
+        first_name: fisrtName,
+        last_name: lastName,
+        email: email,
+        password: password
       }
     }
     try {
-        const res = await axios.post('/users/signup', payload);
-    if(res?.status == 200 || 201){
+      const res = await axios.post('/users/signup', payload);
+      if (res?.status == 200 || 201) {
         login(res?.data?.access_token);
         navigate('/');
-    } 
+      }
     } catch (error) {
-        console.log('error',error);
-        if(error?.response?.data?.error || error?.response?.data?.errors ){
-            return alert(error?.response?.data?.error ? error?.response?.data?.error : error?.response?.data?.errors[0]);
-        }   
+      console.log('error', error);
+      if (error?.response?.data?.error || error?.response?.data?.errors) {
+        return alert(error?.response?.data?.error ? error?.response?.data?.error : error?.response?.data?.errors[0]);
+      }
     }
   };
 
@@ -43,7 +43,7 @@ export default function Register() {
         className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
       >
         <h2 className="text-2xl font-bold text-gray-800 text-center">Register</h2>
-          <input
+        <input
           type="text"
           placeholder="First name"
           className="input text-black"
@@ -51,7 +51,7 @@ export default function Register() {
           onChange={(e) => setFirstName(e.target.value)}
           required
         />
-          <input
+        <input
           type="text"
           placeholder="Last name"
           className="input text-black"
